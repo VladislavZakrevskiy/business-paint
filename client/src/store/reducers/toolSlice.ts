@@ -1,17 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Tool from '../../tools/Tool';
 import { undo } from './canvasSlice';
+import LineChart from '../../tools/Charts/Chart';
 
 interface State {
     tool: Tool | null
+    chart: LineChart | null
+    isChartVisible: boolean
 }
 
 const initialState: State = {
-    tool: null
+    tool: null,
+    chart: null,
+    isChartVisible: false
 };
 
 const toolSlice = createSlice({
-  name: 'canvas',
+  name: 'tools',
   initialState,
   reducers: {
     setTool: (state, action) => {
@@ -30,8 +35,16 @@ const toolSlice = createSlice({
         state.tool!.lineWidth = action.payload
     },
 
+    setChart: (state, action) => {
+        state.chart = action.payload
+    },
+
+    toggleChartVisible: (state) => {
+        state.isChartVisible = !state.isChartVisible
+    }
+
   }
 });
 
-export const { setTool, setFillColor,setLineWidth,setStrokeColor } = toolSlice.actions;
+export const { setTool, setFillColor,setLineWidth,setStrokeColor, setChart, toggleChartVisible} = toolSlice.actions;
 export default toolSlice.reducer

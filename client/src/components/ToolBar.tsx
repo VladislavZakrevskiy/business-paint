@@ -1,13 +1,14 @@
 import React, { ChangeEvent } from 'react'
 import '../styles/toolbar.scss'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { setFillColor, setStrokeColor, setTool } from '../store/reducers/toolSlice'
+import { setFillColor, setStrokeColor, setTool, toggleChartVisible } from '../store/reducers/toolSlice'
 import Brush from '../tools/Brush'
 import Rect from '../tools/Rect'
 import Eraser from '../tools/Eraser'
 import Circle from '../tools/Circle'
 import Line from '../tools/Line'
 import undoRedo from '../tools/UndoRedo'
+import { ToggleButton } from 'react-bootstrap'
 
 type Props = {}
 
@@ -51,6 +52,10 @@ const ToolBar = (props: Props) => {
           className='toolbar_btn line'
           onClick={() => dispatch(setTool(new Line(canvas, socket, id, tool)))}
           />
+        <button
+          className='toolbar_btn'
+          onClick={() => dispatch(toggleChartVisible())}
+        >Chart</button>
         <input 
           type='color' 
           className='toolbar_btn'

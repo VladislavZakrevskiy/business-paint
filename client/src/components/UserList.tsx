@@ -3,6 +3,7 @@ import { useAppSelector } from '../store/hooks'
 import User from './User'
 import '../styles/User.scss'
 import '../styles/canvas.scss'
+import { ListGroup } from 'react-bootstrap'
 
 type Props = {}
 
@@ -11,13 +12,16 @@ const UserList = (props: Props) => {
 
 
   return (
-    <div className="canvas">
-        <div className='user-list'>
+    <ListGroup as='ol' numbered>
+        
             {
-                users.map( (user, i) => <User user={user} i={i + 1}/>)
+                users.map( user => 
+                    <ListGroup.Item as={'li'}>
+                        {user.username}
+                    </ListGroup.Item>)
             }
-        </div>
-    </div>
+        
+    </ListGroup>
         
     )
 }

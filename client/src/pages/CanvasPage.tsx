@@ -3,6 +3,7 @@ import ToolBar from '../components/ToolBar'
 import Settings from '../components/Settings'
 import Canvas from '../components/Canvas'
 import UserList from '../components/UserList'
+import ChartBar from '../components/ChartBar'
 
 type Props = {}
 
@@ -13,6 +14,7 @@ const CanvasPage = (props: Props) => {
       <Settings/>
       <UserList/>
       <Canvas/>
+      <ChartBar/>
     </div>
   )
 }

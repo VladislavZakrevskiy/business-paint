@@ -1,6 +1,7 @@
 import React from 'react'
 import { IUser } from '../models/IUser'
 import '../styles/User.scss'
+import { FormText } from 'react-bootstrap'
 
 interface IUserProps {
     user: IUser
@@ -9,10 +10,9 @@ interface IUserProps {
 
 const User = ({user, i}:IUserProps) => {
   return (
-    <div className='user'>
-        <p>{i}.</p>
-        <p>{user.username}</p>
-    </div>
+    <>
+        <FormText >{user.username}</FormText>
+    </>
   )
 }
 

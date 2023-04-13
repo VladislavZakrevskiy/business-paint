@@ -6,8 +6,8 @@
     background-color: white;
     display: flex;
     align-items: center;
-    position: absolute;
-    top: 0;
+    grid-column-start: 1;
+    grid-column-end: 4;
     width: 100%;
     box-shadow: 0 4px 5px gray;
     z-index: 2;
@@ -59,11 +59,12 @@
 
 
 .settings {
+    grid-column-start: 1;
+    grid-column-end: 4;
     height: $toolbar-height;
     background-color: white;
     display: flex;
     align-items: center;
-    position: absolute;
     width: 100%;
     box-shadow: 0 4px 5px gray;
     top: $toolbar-height;

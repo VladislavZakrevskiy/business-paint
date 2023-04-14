@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { setChart } from '../store/reducers/toolSlice'
-import LineChart, { IDot } from '../tools/Charts/Chart'
-import { Button, Col, Container, Form, Row } from 'react-bootstrap'
+import { LineChart } from '../tools/Charts/LineChart'
+import { Button, ButtonGroup, Col, Container, Form, Row } from 'react-bootstrap'
 import '../styles/canvas.scss'
+import { Chart } from '../tools/Charts/Chart'
 
 const ChartBar = () => {
     const dispatch = useAppDispatch()
@@ -11,17 +12,7 @@ const ChartBar = () => {
     const {isChartVisible, chart} = useAppSelector(state => state.toolSlice)
     const [dots, setDots] = useState<number[]>([])
     const [names, setNames] = useState<string[]>([])
-
-    useEffect(()=> {
-        if(canvas && socket && id){
-            dispatch(setChart(new LineChart(canvas, socket, id)))
-        }
-    }, [canvas, socket, id])
-
-    const addDot = (index: number) => {
-        chart?.setDot(dots[index])
-        chart?.draw()
-    }
+    const [withDots, setWithDots ] = useState<boolean>(false)
 
     const addForm = <T,>(i: number, value: T, type: 'x' | 'name') => {
         let dotsCopy = [...dots]
@@ -42,11 +33,33 @@ const ChartBar = () => {
     }
 
     const setAll = () => {
+        chart?.clearDot()
         for (let i = 0;i<dots.length; i++) {
-            chart?.setDot(dots[i])
+            chart?.setDot(dots[i], names[i])
         }
-        chart?.draw()
+        chart?.draw(withDots)
     }
+
+    const drawWeb = (type: 'vert' | 'horiz' | 'both' | 'remove') => {
+        switch (type) {
+            case 'both':
+                chart?.drawWeb('both')
+                setAll()
+                break;
+            case 'horiz':
+                chart?.drawWeb('horiz')
+                setAll()
+                break;
+            case 'vert':
+                chart?.drawWeb('vert')
+                setAll()
+                break;
+            case 'remove':
+                chart?.drawWeb('remove')
+                setAll()
+                break;
+        }
+    } 
 
 
   return (
@@ -69,11 +82,38 @@ const ChartBar = () => {
                             onChange={e => addForm<string>(i, e.target.value, 'name')}
                             placeholder='Название'
                             />                
-                        <Button onClick={() => addDot(i)}>Set</Button>
                 </Row>
             )
         }
             <Button onClick={setAll}>Set All</Button>
+            <ButtonGroup>
+                <Button onClick={() => {
+                    setWithDots(true)
+                    setAll()    
+                }}>
+                    With Dots
+                </Button>
+                <Button onClick={() => {
+                    setWithDots(false)
+                    setAll()
+                }}>
+                    Without Dots
+                </Button>
+            </ButtonGroup>
+            <ButtonGroup>
+                <Button onClick={() => drawWeb('remove')}>
+                    Update
+                </Button>
+                <Button onClick={() => drawWeb('both')}>
+                    Both
+                </Button>
+                <Button onClick={() => drawWeb('horiz')}>
+                    Hor
+                </Button>
+                <Button onClick={() => drawWeb('vert')}>
+                    Vert
+                </Button>
+            </ButtonGroup>
             <Button onClick={() => setDots(prev => [...prev, 0])}>+</Button>
 
     </Container>

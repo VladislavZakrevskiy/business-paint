@@ -4,6 +4,7 @@ import Settings from '../components/Settings'
 import Canvas from '../components/Canvas'
 import UserList from '../components/UserList'
 import ChartBar from '../components/ChartBar'
+import DiagramBar from '../components/DiagramBar'
 
 type Props = {}
 
@@ -12,7 +13,7 @@ const CanvasPage = (props: Props) => {
     <div className='app'>
       <ToolBar/>
       <Settings/>
-      <UserList/>
+      <DiagramBar/>
       <Canvas/>
       <ChartBar/>
     </div>

@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import '../styles/toolbar.scss'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { setFillColor, setStrokeColor, setTool, toggleChartVisible } from '../store/reducers/toolSlice'
+import { setChart, setDiagram, setFillColor, setStrokeColor, setTool, toggleChartVisible, toggleDiagramVisible } from '../store/reducers/toolSlice'
 import Brush from '../tools/Brush'
 import Rect from '../tools/Rect'
 import Eraser from '../tools/Eraser'
@@ -9,6 +9,9 @@ import Circle from '../tools/Circle'
 import Line from '../tools/Line'
 import undoRedo from '../tools/UndoRedo'
 import { ToggleButton } from 'react-bootstrap'
+import { LineChart } from '../tools/Charts/LineChart'
+import { BezierChart } from '../tools/Charts/BezierChart'
+import { Diagram } from '../tools/Charts/Diagram'
 
 type Props = {}
 
@@ -29,6 +32,11 @@ const ToolBar = (props: Props) => {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
+  }
+
+  const setDiag = () => {
+    dispatch(setDiagram(new Diagram(canvas, socket, id, tool)))
+    dispatch(toggleDiagramVisible())
   }
 
   return (
@@ -52,15 +60,29 @@ const ToolBar = (props: Props) => {
           className='toolbar_btn line'
           onClick={() => dispatch(setTool(new Line(canvas, socket, id, tool)))}
           />
-        <button
-          className='toolbar_btn'
-          onClick={() => dispatch(toggleChartVisible())}
-        >Chart</button>
         <input 
           type='color' 
           className='toolbar_btn'
           onChange={changeColor}
           />
+        <button
+          className=''
+          onClick={() => dispatch(setChart(new LineChart(canvas, socket, id)))}
+        >
+          Line Chart
+        </button>
+        <button
+          className=''
+          onClick={() => dispatch(setChart(new BezierChart(canvas, socket, id)))}
+        >
+          Bezier Chart
+        </button>
+        <button
+          className=''
+          onClick={setDiag}
+        >
+          Diagram
+        </button>
         <button 
           className='toolbar_btn undo'
           onClick={() => undoRedo.sendUndoMsg(id, socket)}

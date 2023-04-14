@@ -1,35 +1,26 @@
-import { IMessage, drawMessage } from "../../models/message";
-import Tool from "../Tool";
-import React from 'react';
-import { setter } from "../UndoRedo";
-import undoRedo from '../UndoRedo';
+import { createSerializableStateInvariantMiddleware } from "@reduxjs/toolkit"
+
 
 export interface IDot {
     x: number
     y: number
+    name: string
 }
 
-export default class LineChart{
-
+export class Chart {
+    private padding: number = 25
+    arrayY: number[] = []
+    dots: IDot[] = []
+    maxDot: IDot = {x: 0, y: 0, name: ''}
+    dotsLength: number = 0
+    canvas: HTMLCanvasElement 
+    ctx: CanvasRenderingContext2D 
+    socket: WebSocket
+    id: string = ''
     width: number = 600
     height: number = 400
-    dots: IDot[] = []
-    dotsLength: number = 0
-    private namesX: string[] = []
-    private canvas: HTMLCanvasElement 
-    private ctx: CanvasRenderingContext2D 
-    private socket: WebSocket
-    private id: string = ''
-    private stepY: number = 0
-    private stepX: number = 0
-    private lastDot: IDot = {x: 0, y: 0}
-    private firstDot: IDot = {x: 0, y: 0}
-    private dashesX: number[] = []
-    private dashesY: number[] = []
-    private difDotsY: number = 0    
-    private difDotsX: number = 0
-    private partsY:number = 0
-    private partsX: number = 0
+    partsX: number = 0
+    partsY: number = 0
 
     constructor (canvas: HTMLCanvasElement, socket: WebSocket, id: string) {
         this.canvas = canvas
@@ -39,116 +30,151 @@ export default class LineChart{
         this.ctx = canvas.getContext('2d')
     }
 
-    setDot(y: number) {
-        const dot: IDot = {x: 200, y}
-        this.dots.push(dot)
-        this.sortDotsByX()
+    clearDot () {
+        this.dots = []
+    }
+
+    setDot (y: number, name: string) {
+        this.arrayY.push(y)
+        this.dots.push({x: 200, y, name})
+    }
+
+    setDotCount () {
         this.dotsLength = this.dots.length
     }
 
-    setName(name: string) {
-        this.namesX.push(name)
+    setMaxDot () {
+        let dots: IDot[] = this.dots.slice(0)
+        const length = this.dotsLength
+        this.maxDot = dots.sort((a,b) => a.y - b.y)[length - 1]
     }
 
-    private sortDotsByX() {
-        this.dots = this.dots.sort((a,b) => a.x - b.x)
+    getPadding (y: number) {
+        return  y < this.height / 2 ? this.padding : 2 * this.padding
     }
 
-    private recalcHeightDots () {
-        this.countParts()
-        for(let i = 0; i < this.dotsLength; i ++) {
-            this.dots[i].x = i * this.partsY * 2 
+    normalize () {
+        this.setDotCount()
+        this.setMaxDot()
+        const maxY = this.maxDot.y
+        for (let i = 0; i < this.dotsLength; i++) {
+            this.dots[i].y = this.height - (this.dots[i].y / maxY * this.height) + this.getPadding(this.dots[i].y)
         }
     }
 
-    private countConfigugation() {
-        let DotsY: Set<number> = new Set()
-        let DotsX: Set<number> = new Set()
-        let lastDot: IDot
-        let firstDot: IDot
-
-        for(let i = 0;i < this.dotsLength;i++) {
-            if(this.lastDot.x <= this.dots[i].x && this.lastDot.y <= this.dots[i].y) {
-                lastDot = this.dots[i]
-            }
-            if(this.firstDot.x >= this.dots[i].x && this.firstDot.y >= this.dots[i].y) {
-                firstDot = this.dots[i]
-            }
-            DotsX.add(this.dots[i].x)
-            console.log(this.dots[i].x)
-            DotsY.add(this.dots[i].y)
-        }
-        //@ts-ignore
-        this.lastDot = lastDot
-        //@ts-ignore
-        this.firstDot = firstDot
-        this.difDotsX = DotsX.size
-        this.difDotsY = DotsY.size
+    countParts () {
+        this.partsX = ( this.width - this.padding * 2) / (this.dotsLength - 1)
+        this.partsY = ( this.height - this.padding * 2) / (this.dotsLength - 1)
     }
 
-    private countAbsoluteXY () {
-        for(let i = 0;i < this.dotsLength;i + this.stepX) {
-            this.dashesX.push(this.width + i) 
-        }
-
-        for(let i = 0;i < this.dotsLength;i + this.stepY) {
-            this.dashesY.push(this.width + i) 
+    readyDots () {
+        for(let i = 0; i < this.dotsLength;i++) {
+            this.dots[i].x = i * this.partsX + this.padding
         }
     }
 
-    joinDots () {
-        for (let i = 0; i < this.dotsLength;i++){
+    getReadyDots () {
+        this?.normalize()
+        this?.countParts()
+        this?.readyDots()
+        this.drawBorder()
+    }
+
+    drawWeb (type: 'both' | 'horiz' | 'vert' | 'remove') {
+        switch (type) {
+            case 'both': 
+                this.ctx.clearRect(0, 0, this.width, this.height)
+                for(let i = 0; i < this.dotsLength;i++) {
+                    this.ctx.beginPath()
+                    this.ctx.moveTo(i * this.partsX, this.padding)
+                    this.ctx.lineTo(i * this.partsX,( this.height - this.padding ))
+                    this.ctx.fill()
+                    this.ctx.stroke()
+
+                    // const vertValue = (this.height - Math.round(this.dots[i].y - this.padding)).toString()
+                    // this.setNumberOnWeb(vertValue, i * this.partsX,( this.height - this.padding ))
+
+                    this.ctx.beginPath()
+                    this.ctx.moveTo(this.padding, i * this.partsY)
+                    this.ctx.lineTo((this.width - this.padding), i * this.partsY)
+                    this.ctx.fill()
+                    this.ctx.stroke()
+
+                    // const horizValue = (this.width - Math.round(this.dots[i].x - this.padding)).toString()
+                    // this.setNumberOnWeb(horizValue, (this.width - this.padding), i * this.partsY)
+                }
+
+                break;
+            case 'horiz':
+                this.ctx.clearRect(0, 0, this.width, this.height)
+                for(let i = 0; i < this.dotsLength;i++) {
+                    this.ctx.beginPath()
+                    this.ctx.moveTo(this.padding, i * this.partsY + this.padding)
+                    this.ctx.lineTo((this.width - this.padding), i * this.partsY + this.padding)
+                    this.ctx.fill()
+                    this.ctx.stroke()
+
+                    // const value = (this.width - Math.round(this.dots[i].x - this.padding)).toString()
+                    // this.setNumberOnWeb(value, (this.width - this.padding), i * this.partsY)
+                }
+
+                break;
+            case 'vert':
+                this.ctx.clearRect(0, 0, this.width, this.height)
+                for(let i = 0; i < this.dotsLength;i++) {
+                    this.ctx.beginPath()
+                    this.ctx.moveTo(i * this.partsX + this.padding, this.padding)
+                    this.ctx.lineTo(i * this.partsX + this.padding, (this.height - this.padding))
+                    this.ctx.fill()
+                    this.ctx.stroke()
+
+                    // const value = (this.height - Math.round(this.dots[i].y - this.padding)).toString()
+                    // this.setNumberOnWeb(value, i * this.partsX,( this.height - this.padding ))
+                }
+                break;
+            case 'remove':
+                this.ctx.clearRect(0, 0, this.width, this.height)
+                break;
+        }
+    }
+
+
+    drawDots() {
+        for ( let i = 0; i < this.dotsLength; i++) {
+            const x = this.dots[i].x
+            const y = this.dots[i].y
             this.ctx.beginPath()
-            this.ctx.moveTo(this.dots[i].x, this.dots[i].y)
-            this.ctx.lineTo(this.dots[i + 1].x, this.dots[i + 1].y)
+            this.ctx.arc(x, y, 3, 0, 2 * Math.PI, false)
             this.ctx.fill()
             this.ctx.stroke()
         }
     }
 
-    private countParts () {
-        console.log(this.difDotsX)
-        this.partsX = this.width / this.difDotsX
-        this.partsY = this.height / this.difDotsY
-        this.dotsLength = this.dots.length
+    setNumberOnWeb (value: string, x: number, y: number) {
+        this.ctx.beginPath()
+        this.ctx.fillText(value, x, y)
+        this.ctx.stroke()
     }
 
-    drawWeb () {
-        this.countParts()
-        for (let i = 0; i < this.width; i + this.partsX) {
+    setNumbersOnDots() {
+        for (let i = 0; i < this.dotsLength; i++) {
+
+            let x, y
+            if (this.dots[i].x > this.width / 2) {
+                x = -60
+            } else { x = 10 }
+            if (this.dots[i].y > this.height / 2) {
+                y = -15
+            } else { y = 15 }
+
             this.ctx.beginPath()
-            this.ctx.moveTo(i, 0)
-            this.ctx.lineTo(i, this.height)
-            this.ctx.fill()
-            this.ctx.stroke()
-            i += this.partsY
-        }
-        for (let i = 0; i < this.width;) {
-            this.ctx.beginPath()
-            this.ctx.moveTo(0, i)
-            this.ctx.lineTo(this.width, i)
-            this.ctx.fill()
-            this.ctx.stroke()
-            i += this.partsY
+            this.ctx.fillText(this.arrayY[i], this.dots[i].x + x, this.dots[i].y + y)
         }
     }
 
-    draw() {
-        this.ctx?.clearRect(0, 0, this.canvas?.width , this.canvas?.height)
-        this.countConfigugation()
-        this.drawWeb()
-        this.recalcHeightDots()
-        this.joinDots()
-
-        for(let i = 0; i < this.dotsLength; i++) {
-            let x: number = this.dots[i].x
-            let y: number = this.height - this.dots[i].y
-            this.ctx.beginPath()
-            this.ctx?.arc(x, y, 3, 0, 2 * Math.PI, false)
-            this.ctx.fillStyle = '#0045ad'
-            this.ctx.strokeStyle = '#0045ad'
-            this.ctx?.fill()
-            this.ctx?.stroke()
-        }
+    drawBorder () {
+        this.ctx.rect(this.padding, this.padding, this.width - this.padding * 2, this.height - this.padding * 2)
+        this.ctx.stroke()
     }
+    
 }

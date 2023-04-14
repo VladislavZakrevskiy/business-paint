@@ -3,13 +3,13 @@ import undoRedo from './UndoRedo';
 
 
 export default class Tool {
-    canvas: HTMLCanvasElement | null = null
+    canvas: HTMLCanvasElement
     ctx: CanvasRenderingContext2D | null | undefined = null
     socket: WebSocket | null = null
     id: string = ''
     undoRedo: undoRedo | null = null
     
-    constructor(canvas: HTMLCanvasElement | null, socket: WebSocket, id: string, undoRedo: undoRedo){
+    constructor(canvas: HTMLCanvasElement, socket: WebSocket, id: string, undoRedo: undoRedo){
        this.undoRedo = undoRedo
        this.canvas = canvas
        this.ctx = canvas?.getContext('2d')

@@ -8,7 +8,7 @@ export interface IDot {
 }
 
 export class Chart {
-    private padding: number = 25
+    padding: number = 25
     arrayY: number[] = []
     dots: IDot[] = []
     maxDot: IDot = {x: 0, y: 0, name: ''}
@@ -46,7 +46,10 @@ export class Chart {
     setMaxDot () {
         let dots: IDot[] = this.dots.slice(0)
         const length = this.dotsLength
-        this.maxDot = dots.sort((a,b) => a.y - b.y)[length - 1]
+        if(dots.sort((a,b) => a.y - b.y)[length - 1].y === Infinity || dots.sort((a,b) => a.y - b.y)[length - 1].y === -Infinity) {
+            this.maxDot = dots.sort((a,b) => a.y - b.y)[length - 2]
+        }
+        else {this.maxDot = dots.sort((a,b) => a.y - b.y)[length - 1]}
     }
 
     getPadding (y: number) {

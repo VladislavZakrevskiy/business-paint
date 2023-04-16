@@ -3,9 +3,12 @@
 
 .canvas {
     height: 100%;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    grid-column-start: 1;
+    grid-column-end: 4;
 }
 
 canvas {

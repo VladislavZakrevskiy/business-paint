@@ -2,9 +2,10 @@ import React from 'react'
 import ToolBar from '../components/ToolBar'
 import Settings from '../components/Settings'
 import Canvas from '../components/Canvas'
-import UserList from '../components/UserList'
-import ChartBar from '../components/ChartBar'
+import LineChartBar from '../components/ChartBar'
 import DiagramBar from '../components/DiagramBar'
+import BezierChartBar from '../components/BezierChartBar'
+import Equation from '../components/Equation'
 
 type Props = {}
 
@@ -13,9 +14,11 @@ const CanvasPage = (props: Props) => {
     <div className='app'>
       <ToolBar/>
       <Settings/>
-      <DiagramBar/>
       <Canvas/>
-      <ChartBar/>
+      <LineChartBar/>
+      <BezierChartBar/>
+      <DiagramBar/>
+      <Equation/>
     </div>
   )
 }

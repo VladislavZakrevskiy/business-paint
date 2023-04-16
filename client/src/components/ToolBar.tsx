@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import '../styles/toolbar.scss'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
-import { setChart, setDiagram, setFillColor, setStrokeColor, setTool, toggleChartVisible, toggleDiagramVisible } from '../store/reducers/toolSlice'
+import { setBezierChart, setChart, setDiagram, setEquation, setFillColor, setStrokeColor, setTool, } from '../store/reducers/toolSlice'
 import Brush from '../tools/Brush'
 import Rect from '../tools/Rect'
 import Eraser from '../tools/Eraser'
@@ -12,6 +12,8 @@ import { ToggleButton } from 'react-bootstrap'
 import { LineChart } from '../tools/Charts/LineChart'
 import { BezierChart } from '../tools/Charts/BezierChart'
 import { Diagram } from '../tools/Charts/Diagram'
+import { Drawer } from '../tools/Charts/Parser/Drawer'
+import Equation from './Equation';
 
 type Props = {}
 
@@ -32,11 +34,6 @@ const ToolBar = (props: Props) => {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-  }
-
-  const setDiag = () => {
-    dispatch(setDiagram(new Diagram(canvas, socket, id, tool)))
-    dispatch(toggleDiagramVisible())
   }
 
   return (
@@ -73,15 +70,21 @@ const ToolBar = (props: Props) => {
         </button>
         <button
           className=''
-          onClick={() => dispatch(setChart(new BezierChart(canvas, socket, id)))}
+          onClick={() => dispatch(setBezierChart(new BezierChart(canvas, socket, id)))}
         >
           Bezier Chart
         </button>
         <button
           className=''
-          onClick={setDiag}
+          onClick={() => dispatch(setDiagram(new Diagram(canvas, socket, id, tool)))}
         >
           Diagram
+        </button>
+        <button
+          className=''
+          onClick={() => dispatch(setEquation(new Drawer(canvas, socket, id)))}
+        >
+          Equation
         </button>
         <button 
           className='toolbar_btn undo'

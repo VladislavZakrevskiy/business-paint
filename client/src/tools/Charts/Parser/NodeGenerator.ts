@@ -38,7 +38,6 @@ export function CreateNodesFromTokens(tokens: any[]) {
       if (token.type === "function-name") {
         let innerTokens = [];
   
-        // move forward past the function name
         i++;
   
         if (

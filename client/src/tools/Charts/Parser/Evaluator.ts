@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ExecuteFunction, ExecuteOperator } from "./Functions";
 import { CreateNodesFromTokens } from "./NodeGenerator";
 

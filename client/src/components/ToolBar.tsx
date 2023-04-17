@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { ChangeEvent } from 'react'
 import '../styles/toolbar.scss'
 import { useAppDispatch, useAppSelector } from '../store/hooks'

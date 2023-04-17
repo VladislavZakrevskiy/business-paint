@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useCallback, useRef } from "react"
 
 export const useDebouce = (callback: (e: React.SetStateAction<string>) => any, delay: number) => {

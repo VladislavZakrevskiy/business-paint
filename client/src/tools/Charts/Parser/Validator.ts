@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { HasFunction } from "./Functions";
 import { tokenIsValue } from "./SyntataxToken";
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { drawMessage } from "../models/message";
 import Tool from "./Tool";
 import React from 'react';

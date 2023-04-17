@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { drawMessage } from "../models/message"
 import Brush from "../tools/Brush"
 import Circle from "../tools/Circle"

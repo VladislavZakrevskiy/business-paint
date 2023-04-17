@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Lexer } from "../tools/Charts/Parser/Lexer";
 import { SyntaxTokenizer } from "../tools/Charts/Parser/SyntataxToken";

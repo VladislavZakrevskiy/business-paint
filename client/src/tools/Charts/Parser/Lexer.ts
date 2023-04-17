@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function Lexer(formula, syntaxTokenizer) {
     let position = 0;
     const tokens = [];

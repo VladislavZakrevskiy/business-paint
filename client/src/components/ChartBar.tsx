@@ -64,8 +64,8 @@ const ChartBar = () => {
 
   return (
     <Container
-        style={{display: isChartVisible ? 'flex' : 'none', marginTop: '60px', flexDirection: 'column', padding: 40, gap: 10}}
-        
+        style={{display: isChartVisible ? 'flex' : 'none'}}
+        className='bar'
     >
         {
             dots.map((item, i) => 

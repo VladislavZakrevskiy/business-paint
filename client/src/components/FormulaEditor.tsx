@@ -3,6 +3,7 @@ import { Lexer } from "../tools/Charts/Parser/Lexer";
 import { SyntaxTokenizer } from "../tools/Charts/Parser/SyntataxToken";
 import { ValidateTokens } from "../tools/Charts/Parser/Validator";
 import "../styles/equlation.scss";
+import { Form } from "react-bootstrap";
 
 export function FormulaEditor(props: any) {
   const { value, onChange, onErrorsChanged, onTokensChanged } = props;
@@ -62,7 +63,7 @@ export function FormulaEditor(props: any) {
 
   return (
     <div className="formula-editor">
-      <textarea
+      <Form.Control
         value={value}
         onChange={textareaOnChange}
         className="formula-editor-textarea"

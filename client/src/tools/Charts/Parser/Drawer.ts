@@ -25,24 +25,18 @@ export class Drawer extends Chart {
         this.ctx.stroke()
     }
 
-    normilizeX () {
+    normilize () {
         this.setDotCount()
-        for(let i = 0; i < this.dotsLength; i++) {
-            this.dots[i].x = (this.dots[i].x / 2) + this.halfWidth
-        }
-    }
-
-    normalizeY() {
         this.setMaxDot()
         const maxY = this.maxDot.y
-        for (let i = 0; i < this.dotsLength; i++) {
+        for(let i = 0; i < this.dotsLength; i++) {
+            this.dots[i].x = (this.dots[i].x / 2) + this.halfWidth
             this.dots[i].y = this.halfHeight - ( this.dots[i].y / maxY ) * this.height
         }
     }
 
     draw() {
-        this.normilizeX()
-        this.normalizeY()
+        this.normilize()
         this.drawXYCoord()
         this.drawBorder()
         for(let i = 0; i < this.dotsLength - 1; i++) {

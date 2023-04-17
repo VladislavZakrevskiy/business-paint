@@ -6,15 +6,19 @@ import LineChartBar from '../components/ChartBar'
 import DiagramBar from '../components/DiagramBar'
 import BezierChartBar from '../components/BezierChartBar'
 import Equation from '../components/Equation'
+import UserList from '../components/UserList'
 
 type Props = {}
 
 const CanvasPage = (props: Props) => {
   return (
     <div className='app'>
-      <ToolBar/>
-      <Settings/>
+      <div>
+        <ToolBar/>
+        <Settings/>
+      </div>
       <Canvas/>
+      <UserList/>
       <LineChartBar/>
       <BezierChartBar/>
       <DiagramBar/>

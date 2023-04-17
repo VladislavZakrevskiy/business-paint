@@ -2,72 +2,32 @@
 
 
 .toolbar {
-    height: $toolbar-height;
     background-color: white;
-    display: flex;
-    align-items: center;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    width: 100%;
-    box-shadow: 0 4px 5px gray;
-    z-index: 2;
-    background-size: cover;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 20px;
 
     &_btn {
-        height: 25px;
-        width: 25px;
+        width: 100%;
         cursor: pointer;
-        outline: none;
-        border: none;
-        margin-left: 10px;
 
-    }
-    .brush {
-        background: url('../assets/brush.png') no-repeat center center;   
-    }
 
-    .circle {
-        background: url('../assets/circle.png') no-repeat center center;
-    }
-
-    .eraser {
-        background: url('../assets/eraser.png') no-repeat center center;
-    }
-
-    .line {
-        background: url('../assets/line.png') no-repeat center center;
-    }
-
-    .rect {
-        background: url('../assets/rect.png') no-repeat center center;
-    }
-
-    .redo{
-        background: url('../assets/redo.png') no-repeat center center;
-    }
-
-    .undo {
-        margin-left: auto;
-        background: url('../assets/undo.png') no-repeat center center;
-    }
-
-    .save {
-        background: url('../assets/save.png') no-repeat center center;
-        margin-right: 10px;
     }
 }
 
 
 .settings {
-    grid-column-start: 1;
-    grid-column-end: 4;
     height: $toolbar-height;
     background-color: white;
     display: flex;
     align-items: center;
-    width: 100%;
-    box-shadow: 0 4px 5px gray;
-    top: $toolbar-height;
-    padding-left: 10px;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+
+    &_btn {
+        width: 100%;
+    }
 }
 

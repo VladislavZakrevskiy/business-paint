@@ -20,5 +20,13 @@
     background-color: $background_color;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 40px 40px auto;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.header {
+    padding: 10px;
+    
+    &_brand {
+        font-size: xx-large;
+    }
 }

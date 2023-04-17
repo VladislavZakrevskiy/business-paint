@@ -4,7 +4,6 @@ import { EvaluateTokens, GetReferencesFromTokens } from "../tools/Charts/Parser/
 import "../styles/equlation.scss";
 import { useAppSelector } from "../store/hooks";
 import { Button } from "react-bootstrap";
-import { useDebouce } from "../tools/Charts/Parser/useDebounce";
 
 function Equation() {
   const [formula, setFormula] = useState(``);
@@ -12,7 +11,6 @@ function Equation() {
   const [tokens, setTokens] = useState([]);
   const {canvas} = useAppSelector(state => state.canvasSlice)
   const {equation ,isEquationVisible} = useAppSelector(state => state.toolSlice)
-  // const [inputValues, setInputValue] = useForm({});
   const [inputValues, setInputValue] = useState({x: 0})
 
   const references = GetReferencesFromTokens(tokens);
@@ -28,12 +26,6 @@ function Equation() {
     }
   }
 
-  const debouncedCb = useDebouce(onChange, 500)
-
-  const inputHandler = (e: React.SetStateAction<string>) => {
-    debouncedCb()
-  }
-
   useEffect(() => {
     if(canvas && errors.length === 0) {
       equation?.setDotXY( +inputValues['x'], +result )
@@ -45,8 +37,8 @@ function Equation() {
   }
 
   return (
-    <div style={{display: isEquationVisible ? 'unset' : 'none'}}>
-      <div className="formula-example" >
+    <div style={{display: isEquationVisible ? 'flex' : 'none'}} className="formula-example">
+      <div  >
         <h3>Editor</h3>
         <FormulaEditor
           value={formula}
@@ -61,8 +53,7 @@ function Equation() {
         ))}
       </div>
       <Button onClick={set}>Set</Button>
-    </div>
-      
+    </div>     
   );
 }
 

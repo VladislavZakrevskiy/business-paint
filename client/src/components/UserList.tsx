@@ -2,8 +2,8 @@ import React from 'react'
 import { useAppSelector } from '../store/hooks'
 import User from './User'
 import '../styles/User.scss'
-import '../styles/canvas.scss'
 import { ListGroup } from 'react-bootstrap'
+import IdCode from './IdCode'
 
 type Props = {}
 
@@ -12,8 +12,8 @@ const UserList = (props: Props) => {
 
 
   return (
-    <ListGroup as='ol' numbered>
-        
+    <ListGroup as='ol' numbered className='user-component' >
+            <IdCode/>
             {
                 users.map( user => 
                     <ListGroup.Item as={'li'}>

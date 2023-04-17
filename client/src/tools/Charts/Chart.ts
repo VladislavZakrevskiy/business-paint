@@ -57,11 +57,11 @@ export class Chart {
     }
 
     normalize () {
-        this.setDotCount()
         this.setMaxDot()
         const maxY = this.maxDot.y
         for (let i = 0; i < this.dotsLength; i++) {
             this.dots[i].y = this.height - (this.dots[i].y / maxY * this.height) + this.getPadding(this.dots[i].y)
+            this.dots[i].x = i * this.partsX + this.padding
         }
     }
 
@@ -70,16 +70,10 @@ export class Chart {
         this.partsY = ( this.height - this.padding * 2) / (this.dotsLength - 1)
     }
 
-    readyDots () {
-        for(let i = 0; i < this.dotsLength;i++) {
-            this.dots[i].x = i * this.partsX + this.padding
-        }
-    }
-
     getReadyDots () {
-        this?.normalize()
+        this.setDotCount()
         this?.countParts()
-        this?.readyDots()
+        this?.normalize()
         this.drawBorder()
     }
 
@@ -94,17 +88,11 @@ export class Chart {
                     this.ctx.fill()
                     this.ctx.stroke()
 
-                    // const vertValue = (this.height - Math.round(this.dots[i].y - this.padding)).toString()
-                    // this.setNumberOnWeb(vertValue, i * this.partsX,( this.height - this.padding ))
-
                     this.ctx.beginPath()
                     this.ctx.moveTo(this.padding, i * this.partsY)
                     this.ctx.lineTo((this.width - this.padding), i * this.partsY)
                     this.ctx.fill()
                     this.ctx.stroke()
-
-                    // const horizValue = (this.width - Math.round(this.dots[i].x - this.padding)).toString()
-                    // this.setNumberOnWeb(horizValue, (this.width - this.padding), i * this.partsY)
                 }
 
                 break;
@@ -117,8 +105,6 @@ export class Chart {
                     this.ctx.fill()
                     this.ctx.stroke()
 
-                    // const value = (this.width - Math.round(this.dots[i].x - this.padding)).toString()
-                    // this.setNumberOnWeb(value, (this.width - this.padding), i * this.partsY)
                 }
 
                 break;
@@ -131,8 +117,6 @@ export class Chart {
                     this.ctx.fill()
                     this.ctx.stroke()
 
-                    // const value = (this.height - Math.round(this.dots[i].y - this.padding)).toString()
-                    // this.setNumberOnWeb(value, i * this.partsX,( this.height - this.padding ))
                 }
                 break;
             case 'remove':

@@ -1,0 +1,33 @@
+@import './consts.scss';
+
+
+.toolbar {
+    background-color: white;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 20px;
+
+    &_btn {
+        width: 100%;
+        cursor: pointer;
+
+
+    }
+}
+
+
+.settings {
+    height: $toolbar-height;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 20px;
+
+    &_btn {
+        width: 100%;
+    }
+}
+

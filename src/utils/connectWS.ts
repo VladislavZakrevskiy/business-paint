@@ -11,7 +11,7 @@ import { drawHandler } from "./drawWS"
 
 export const connectWS = (username: string | null, id: string , dispatch: any, canvas: HTMLCanvasElement, tool: undoRedo, users: IUser[]) => {
     if( username ) {
-        const socket = new WebSocket('wss://business-paint.vercel.app/')
+        const socket = new WebSocket('ws://business-paint.vercel.app/')
         dispatch(setSocket(socket))
         dispatch(setTool(new Brush(canvas, socket, id, tool)))
         const msg: connectionMessage = {

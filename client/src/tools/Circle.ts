@@ -75,7 +75,7 @@ export default class Circle extends Tool {
             let currentX = e.pageX- e.target.offsetLeft
             // @ts-ignore
             let currentY = e.pageY - e.target.offsetTop
-            this.radius = Math.sqrt(Math.abs((this.startX - currentX)**2-(this.startY - currentY)**2))
+            this.radius = Math.sqrt(Math.abs((this.startX - currentX)**2+(this.startY - currentY)**2))
             // @ts-ignore
             this.draw(this.startX, this.startY)
         }
